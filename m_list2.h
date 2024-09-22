@@ -2,6 +2,7 @@
 #define MY_LIST_2_H
 #include <iostream>
 #include<type_traits>
+#include <iterator>
 #include <initializer_list>
 template<typename T>
 class  list2 {
@@ -65,7 +66,9 @@ if(n->nxt_) // если была последующая Node
 
 };
 template<typename Iter> // для <int*> Iter = int*
-class Iterator{
+class Iterator: public std::iterator<std::bidirectional_iterator_tag
+                                        ,Iter >
+{
 
 friend list2;
 public: 
@@ -73,6 +76,7 @@ public:
  using pointer=value_type*;
  using reference=value_type&;
  
+ typedef std::bidirectional_iterator_tag iterator_category;
  
 Iterator(Node<Iter>* it):it_(it){}
   //template<typename It>
@@ -96,7 +100,7 @@ value_type operator*() const {return *(it_->data());}
 } 
 
 bool operator==(const Iterator &it) const {return it.it_==it_;}
-
+operator bool() {return it_;}
 private:
 void _insert(Node<Iter> *n)
 {
